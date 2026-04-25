@@ -1,3 +1,4 @@
+#include <iostream>
 #include <ipv4.h>
 
 std::optional<uint8_t> ipv4_t::read_numberf_from_string(char *&ptr)
@@ -76,6 +77,7 @@ std::optional<uint32_t> ipv4_t::parse_mask(const char *ip_str)
 
     return (1 << (mask + 1)) - 1;
 }
+
 bool ipv4_t::valid_host_with_mask()
 {
     bool result = true;
@@ -88,4 +90,20 @@ bool ipv4_t::valid_host_with_mask()
     uint8_t mask_length = ip_address.get_mask_length();
 
     return result;
+}
+
+void ipv4_t::print_address()
+{
+    std::cout << "IP Address: ";
+
+    for (size_t i = 0; i < sizeof(ip_address.host.bytes); i++)
+    {
+        std::cout << static_cast<int>(ip_address.host.bytes[i]);
+        if (i < sizeof(ip_address.host.bytes) - 1)
+        {
+            std::cout << ".";
+        }
+    }
+
+    std::cout << "/" << __builtin_popcount(ip_address.mask.value) << "\n";
 }

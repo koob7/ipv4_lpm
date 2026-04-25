@@ -8,8 +8,8 @@
             "program": "${workspaceFolder}/dist/ipv4_lpm.exe",
             "args": [
                 "192.168.1.0/24",
-                "10.0.0.0/8",
-                "192.168.1.1"
+                "192.168.0.0/16",
+                "192.168.1.42"
             ],
             "stopAtEntry": true,
             "cwd": "${fileDirname}",

@@ -59,6 +59,30 @@ int main(int argc, char *argv[])
 
     host = ipv4_t::parse_host(argv[1 + ROUTING_ADDRESSES]);
 
-    std::cout << "OK - program działa\n";
+    ipv4_t ip_address_to_find(*host);
+
+    ipv4_t *best_match = nullptr;
+
+    for (auto &entry : routing_table)
+    {
+        if ((ip_address_to_find.ip_address.host.value & entry.ip_address.mask.value) == entry.ip_address.host.value)
+        {
+            if (best_match == nullptr || entry.ip_address.get_mask_length() > best_match->ip_address.get_mask_length())
+            {
+                best_match = &entry;
+            }
+        }
+    }
+
+    if (best_match)
+    {
+        std::cout << "Best match found: ";
+        best_match->print_address();
+    }
+    else
+    {
+        std::cout << "No match found\n";
+    }
+
     return 0;
 }

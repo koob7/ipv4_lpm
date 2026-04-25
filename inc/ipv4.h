@@ -28,6 +28,7 @@ class ipv4_t
     static std::optional<uint32_t> parse_mask(const char *ip_str);
 
     bool valid_host_with_mask();
+    void print_address();
 
   private:
     static std::optional<uint8_t> read_numberf_from_string(char *&ptr);
