@@ -1,4 +1,6 @@
 #include <iostream>
+#include <ipv4.h>
+#include <vector>
 
 // -exec p/x argv[0]
 // $2 = 0x1a28f42f3d0
@@ -14,13 +16,48 @@
 // $7 = 51 '3'
 // -exec p *argv[4]
 
+#define ROUTING_ADDRESSES 2
+
 int main(int argc, char *argv[])
 {
-    if (argc != 4) // first argument is the program name, so we need 4 arguments in total
+    if (argc != 1 + ROUTING_ADDRESSES + 1) // first argument is the program name, so we need 4 arguments in total
     {
-        std::cout << "Usage: ./ipv4_lpm prefix1 prefix2 ip\n";
+        std::cout << "Wrong number of arguments passed\n";
+        std::cout << "you should pass 2 ip addresses with mask in short format and one ip address\n";
+        std::cout << "example: ./ipv4_lpm 194.168.1.0/24 10.0.0.0/8 192.168.1.1\n";
+
         return 1;
     }
+
+    std::vector<ipv4_t> routing_table;
+
+    std::optional<uint32_t> host;
+    std::optional<uint32_t> mask;
+    ipv4_t ip_address;
+
+    for (size_t i = 1; i < 1 + ROUTING_ADDRESSES; i++)
+    {
+        host = ipv4_t::parse_host(argv[i]);
+        mask = ipv4_t::parse_mask(argv[i]);
+
+        if (!host || !mask)
+        {
+            std::cout << "Wrong format of ip address nr: " << i << "\n";
+            return 1;
+        }
+
+        ip_address = ipv4_t(*host, *mask);
+
+        if (!ip_address.valid_host_with_mask())
+        {
+            std::cout << "IP address not possible nr: " << i << "\n";
+            return 1;
+        }
+
+        routing_table.emplace_back(*host, *mask);
+    }
+
+    host = ipv4_t::parse_host(argv[1 + ROUTING_ADDRESSES]);
 
     std::cout << "OK - program działa\n";
     return 0;

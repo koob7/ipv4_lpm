@@ -13,6 +13,7 @@ include_directories(inc)
 
 add_executable(ipv4_lpm
     src/main.cpp
+    src/ipv4.cpp
 )
 
 add_custom_command(TARGET ipv4_lpm POST_BUILD
