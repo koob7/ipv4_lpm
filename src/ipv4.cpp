@@ -4,6 +4,10 @@
 std::optional<uint8_t> ipv4_t::read_numberf_from_string(char *&ptr)
 {
     uint32_t number = strtoul(ptr, &ptr, 10);
+    if (ptr == nullptr)
+    {
+        return std::nullopt;
+    }
 
     if (number > UINT8_MAX)
     {
@@ -23,10 +27,6 @@ std::optional<uint32_t> ipv4_t::parse_host(const char *ip_str)
 
     for (uint8_t i = 0; i < sizeof(value.bytes); i++)
     {
-        if (pointer == nullptr)
-        {
-            return std::nullopt;
-        }
 
         if (*pointer == '\0')
         {
@@ -61,14 +61,15 @@ std::optional<uint32_t> ipv4_t::parse_mask(const char *ip_str)
             return std::nullopt;
         }
 
-        if (pointer == nullptr)
-        {
-            return std::nullopt;
-        }
         pointer++;
     }
 
-    uint32_t mask = strtoul(pointer + 1, nullptr, 10);
+    uint32_t mask = strtoul(pointer + 1, &pointer, 10);
+
+    if (pointer == nullptr)
+    {
+        return std::nullopt;
+    }
 
     if (mask > MASK_MAX_LENGTH)
     {
