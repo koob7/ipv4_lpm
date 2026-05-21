@@ -76,7 +76,7 @@ std::optional<uint32_t> ipv4_t::parse_mask(const char *ip_str)
         return std::nullopt;
     }
 
-    return (1 << (mask + 1)) - 1;
+    return (static_cast<uint64_t>(1) << mask) - 1;
 }
 
 bool ipv4_t::valid_host_with_mask()
