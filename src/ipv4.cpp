@@ -39,7 +39,7 @@ std::optional<uint32_t> ipv4_t::parse_host(const char *ip_str)
             return std::nullopt;
         }
 
-        value.bytes[i] = *number;
+        value.bytes[sizeof(value.bytes) - 1 - i] = *number;
 
         if (*pointer != '.' && i < sizeof(value.bytes) - 1)
         {
@@ -76,15 +76,18 @@ std::optional<uint32_t> ipv4_t::parse_mask(const char *ip_str)
         return std::nullopt;
     }
 
-    return (static_cast<uint64_t>(1) << mask) - 1;
+    if (mask == 0)
+    {
+        return 0;
+    }
+
+    uint32_t mask_value = ~((1 << (MASK_MAX_LENGTH - mask)) - 1);
+    return mask_value;
 }
 
 bool ipv4_t::valid_host_with_mask()
 {
     bool result = true;
-
-    result &= ip_address.host.value != 0;
-    result &= ip_address.mask.value != 0;
 
     result &= (ip_address.host.value & ip_address.mask.value) == ip_address.host.value;
 
