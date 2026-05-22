@@ -48,12 +48,6 @@ int main(int argc, char *argv[])
 
         ip_address = ipv4_t(*host, *mask);
 
-        if (!ip_address.valid_host_with_mask())
-        {
-            std::cout << "IP address not possible nr: " << i << "\n";
-            return 1;
-        }
-
         routing_table.emplace_back(*host, *mask);
     }
 
@@ -65,7 +59,8 @@ int main(int argc, char *argv[])
 
     for (auto &entry : routing_table)
     {
-        if ((ip_address_to_find.ip_address.host.value & entry.ip_address.mask.value) == entry.ip_address.host.value)
+        if ((entry.ip_address.host.value & entry.ip_address.mask.value) ==
+            (ip_address_to_find.ip_address.host.value & entry.ip_address.mask.value))
         {
             if (best_match == nullptr || entry.ip_address.get_mask_length() > best_match->ip_address.get_mask_length())
             {

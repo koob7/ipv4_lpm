@@ -7,9 +7,9 @@
             "request": "launch",
             "program": "${workspaceFolder}/dist/ipv4_lpm.exe",
             "args": [
-                "192.168.1.0/0",
-                "192.168.0.0/16",
-                "192.168.1.42"
+                "192.168.0.0/24",
+                "192.168.0.8/28",
+                "192.168.0.9"
             ],
             "stopAtEntry": true,
             "cwd": "${fileDirname}",
